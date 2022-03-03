@@ -2,6 +2,7 @@
 
 RNA::RNA()
 {
+	//Inicialización de las variables
 	Tasa_aprendizaje = 1.414213562;
 	momento = 0.25;
 	h1 = 0;
@@ -30,7 +31,7 @@ RNA::RNA()
 	}
 	
 }
-
+//Activación de tipo sigmoide
 float RNA::FunAct_Sigmoid(float x)
 {
 	float sigmoid = 1 / (1 + exp(-x));
@@ -43,6 +44,7 @@ float RNA::FunAct_Sigmoid(float x)
 
 void RNA::CalNeuronasEscondidas(int x)
 {
+	//Sumatoria de cada una de las neuronas y su salida
 	sum_h1 = (entradas[x][0] * pesos[0]) + (entradas[x][1] * pesos[2]) + (sesgo * pesos[4]);
 	sum_h2 = (entradas[x][0] * pesos[1]) + (entradas[x][1] * pesos[3]) + (sesgo * pesos[5]);
 	h1 = FunAct_Sigmoid(sum_h1);
@@ -51,18 +53,22 @@ void RNA::CalNeuronasEscondidas(int x)
 
 void RNA::CalNeruonaSalida()
 {
+	//Calculo de la neruona de salida
 	sum_salida = (h1 * pesos[6]) + (h2 * pesos[7]) + (sesgo * pesos[8]);
 	salida_neuron = FunAct_Sigmoid(sum_salida);
 }
 void RNA::CalcError(int x) {
+	//Error salida obtenida - salida esperada
 	error[x] = salida_neuron - salidas[x];
 }
 void RNA::CalcDeriva(int x) {
+	//Calculo de la derivada para cada una de las neuronas
 	derivada_O1 = -error[x] * (exp(salida_neuron) / pow((1 + exp(salida_neuron)), 2));
 	derivada_h1 = (exp(sum_h1) / pow((1 + exp(sum_h1)), 2)) * pesos[6] * derivada_O1;
 	derivada_h2 = (exp(sum_h2) / pow((1 + exp(sum_h2)), 2)) * pesos[7] * derivada_O1;
 }
 void RNA::CalcGradiente(int x) {
+	//Calculo del gradiente en cada una de las conexiones de la neurona usando el sesgo
 	gradiente[0] = FunAct_Sigmoid(entradas[x][0]) * derivada_h1;
 	gradiente[1] = FunAct_Sigmoid(entradas[x][0]) * derivada_h2;
 	gradiente[2] = FunAct_Sigmoid(entradas[x][1]) * derivada_h1;
@@ -75,6 +81,7 @@ void RNA::CalcGradiente(int x) {
 }
 
 void RNA::CalcActua() {
+//Calculo de los pesos de la RNA teniendo en cuenta la epoca, momento y su tasa de aprendizaje
 	for (int i = 0; i < 9; i++)
 	{
 		pesos_nuevos[i] = (Tasa_aprendizaje * gradiente[i]) + (momento * pesos_previos[i]);
@@ -83,12 +90,14 @@ void RNA::CalcActua() {
 }
 
 void RNA::Camb_Pesos() {
+	//Cambio de pesos 
 	for (int i = 0; i < 9; i++)
 	{
 		pesos[i] = pesos[i] + pesos_nuevos[i];
 	}
 }
 void RNA::CalRMSE() {
+	//Error cuadratico medio usado para tener una mejor exactitud en cada conexión
 	RMSE_ERROR = sqrt((pow(error[0], 2) + pow(error[1], 2) + pow(error[2], 2) + pow(error[3], 2) / 4));
 	cout << "Error cuadratico: " << RMSE_ERROR << endl;
 	cout << "" << endl;

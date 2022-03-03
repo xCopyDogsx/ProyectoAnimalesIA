@@ -1,12 +1,35 @@
-#include "RNA.h"
+/*|-----------------------------------|*/
+/*|           Proyecto Zoologico      |  
+  |Diseñado por:                      |
+  |  Maria L. Regino Salgado          | 
+  |  Brian S. Cañon Rojas             |
+  |  Códigos:-20182578014             |
+  |  -20191578110                     |
+  |              UDFJC                |
+  |              2021                 | */
+/*|-----------------------------------|*/
 
+
+/*---------Recomendaciones: ------------------------------------------------------------
+  1. No usar DEV-C++ dado a que este usa un compilador desactualizado.
+  2. Usar un compilador GCC u otro que este al día, además de usar VS Code como IDE o VS Community.
+  3. Si usa un compilador desactualizado, lo más probable es que el código no compile. 
+  4. Algunos métodos presentados acá fueron recuperados de diferentes autores y bibliografias
+  creditos a sus respectivos autores. 
+-----------------------------------------------------------------------------------------*/
+
+/*Llamado al la libreria que contiene los procedimientos 
+necesarios para ejecutar la red neuronal
+*/
+#include "RNA.h"
+//Metodo para poder pasar una cadena minuscula a mayusucla
 string aMayuscula(string cadena);
 
 int main()
 {
+    //Instancia de la red Neuronal 
 	RNA* rna = new RNA();
-	
-    int contador = 0;
+    //Variables necesarias para la ejecución del menu de usuario
     float x, y;
     string nombreA="";
     string tipoA = "";
@@ -26,9 +49,7 @@ int main()
         {
         case 1:
             system("cls");
-            rna->Entrenar();
-            
-           
+            rna->Entrenar();//Se llama a la red neuronal para que se entrene 
             system("pause");
             break;
         case 2:
@@ -66,6 +87,7 @@ int main()
                 cout << "\t | 5 | Mojarra   | Pez            | \t" << endl;
                 cout << "\t | 6 | Otro                       | \t" << endl;
                 cout << " Ingrese opcion:  ";  cin >> opcion; cout << endl;
+               //Asignacion de pesos dependiendo del tipo de animal y su clasificación
                 switch (opcion)
                 {
                 case 1:
@@ -84,14 +106,13 @@ int main()
                     rna->Probar(0, 0);
                     break;
                 case 6:
+                //En caso de que sea un animal nuevo, la red preguntara por otras caracteristicas
                     system("cls");
                     cin.ignore();
                     cout << "Ingrese el nombre del animal:  " << endl;
                     getline(cin, nombreA);
-                   
                     cout << "Ingrese el tipo del animal (Vertebrado,Invertebrado,Etc):  " << endl;
                     getline(cin, tipoA);
-                   
                     tipoA = aMayuscula(tipoA);
                     if (strcmp(tipoA.c_str(), "VERTEBRADO") == 0) {
                         rna->Probar(0, 1);
@@ -137,7 +158,7 @@ int main()
 }
 
 
-
+//Metodo para el parseo de minusculas a mayusculas
 string aMayuscula(string cadena) {
     for (int i = 0; i < cadena.length(); i++) cadena[i] = toupper(cadena[i]);
     return cadena;
